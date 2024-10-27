@@ -533,7 +533,7 @@ export const PdfHighlighter = ({
           .textLayer ::selection {
             background: ${textSelectionColor};
           }
-        `}
+          `}
         </style>
         {isViewerReady && (
           <TipContainer

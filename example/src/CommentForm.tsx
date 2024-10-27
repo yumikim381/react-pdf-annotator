@@ -6,11 +6,15 @@ interface CommentFormProps {
 }
 
 const CommentForm = ({ onSubmit, placeHolder }: CommentFormProps) => {
-  const [input, setInput] = useState<string>("");
+  const [input, setInput] = useState<string>(placeHolder || "");
 
   return (
     <form
       className="Tip__card"
+      /**
+       * Prevents the browser’s default form submission behavior, which would cause a page reload.
+       *  Instead, use the custom onSubmit function to handle the form submission from parents 
+       */
       onSubmit={(event) => {
         event.preventDefault();
         onSubmit(input);
@@ -18,7 +22,11 @@ const CommentForm = ({ onSubmit, placeHolder }: CommentFormProps) => {
     >
       <div>
         <textarea
-          placeholder={placeHolder}
+          value={input} // Set the current input value
+          /**
+           *  Automatically focuses the textarea when the component renders, so the user can start typing immediately
+           * "focus" refers to the state where an input element is ready to receive user input.
+           */
           autoFocus
           onChange={(event) => {
             setInput(event.target.value);

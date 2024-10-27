@@ -22,8 +22,17 @@ const TEST_HIGHLIGHTS = _testHighlights;
 const PRIMARY_PDF_URL = "https://arxiv.org/pdf/2203.11115";
 const SECONDARY_PDF_URL = "https://arxiv.org/pdf/1604.02480";
 
-const getNextId = () => String(Math.random()).slice(2);
 
+const getNextId = () => String(Math.random()).slice(2);
+/*
+Overall things with hash
+- provides a mechanism for navigating to a specific highlighted section on a page based on a URL hash value, which could represent a unique identifier for each highlight
+*/
+/*
+This function extracts an ID from the URL hash.
+It assumes that the hash is in the format #highlight-{id}, where {id} is the unique identifier for a highlight.
+document.location.hash returns the hash portion of the URL (e.g., #highlight-123)
+*/
 const parseIdFromHash = () => {
   return document.location.hash.slice("#highlight-".length);
 };
@@ -54,34 +63,52 @@ const App = () => {
     setHighlights(TEST_HIGHLIGHTS[urls[currentPdfIndexRef.current]] ?? []);
   };
 
-  // Click listeners for context menu
-  useEffect(() => {
-    const handleClick = () => {
-      if (contextMenu) {
-        setContextMenu(null);
-      }
-    };
-
-    document.addEventListener("click", handleClick);
-
-    return () => {
-      document.removeEventListener("click", handleClick);
-    };
-  }, [contextMenu]);
-
-  const handleContextMenu = (
-    event: MouseEvent<HTMLDivElement>,
-    highlight: ViewportHighlight<CommentedHighlight>,
-  ) => {
-    event.preventDefault();
-
-    setContextMenu({
-      xPos: event.clientX,
-      yPos: event.clientY,
-      deleteHighlight: () => deleteHighlight(highlight),
-      editComment: () => editComment(highlight),
-    });
+/**
+   * Context menu- can edit or delete a highlight on rightclick
+   * Right-click triggers handleContextMenu, 
+   * preventing the default context menu and setting contextMenu
+   * with the necessary data to display a custom context menu at the right-click location.
+   * Left-click anywhere else triggers handleClick (from the useEffect), 
+   * which checks if contextMenu is set and then hides it by setting contextMenu to null
+   */
+useEffect(() => {
+  const handleClick = () => {
+    /*
+    This function checks if contextMenu is currently set
+    */
+    if (contextMenu) {
+      setContextMenu(null);
+    }
   };
+  /*
+  this is set up to listen for any click events (left-clicks) on the document.
+   */
+  document.addEventListener("click", handleClick);
+
+  return () => {
+    /**
+     * Removes the event listener when the component unmounts or when the effect is re-run
+     */
+    document.removeEventListener("click", handleClick);
+  };
+}, [contextMenu]);
+
+const handleContextMenu = (
+  event: MouseEvent<HTMLDivElement>,
+  highlight: ViewportHighlight<CommentedHighlight>,
+) => {
+  /*
+  prevents the default right-click context menu from appearing
+   */
+  event.preventDefault();
+
+  setContextMenu({
+    xPos: event.clientX,
+    yPos: event.clientY,
+    deleteHighlight: () => deleteHighlight(highlight),
+    editComment: () => editComment(highlight),
+  });
+};
 
   const addHighlight = (highlight: GhostHighlight, comment: string) => {
     console.log("Saving highlight", highlight);
@@ -135,23 +162,33 @@ const App = () => {
     highlighterUtilsRef.current.toggleEditInProgress(true);
   };
 
-  // Scroll to highlight based on hash in the URL
-  const scrollToHighlightFromHash = () => {
-    const highlight = getHighlightById(parseIdFromHash());
-
-    if (highlight && highlighterUtilsRef.current) {
-      highlighterUtilsRef.current.scrollToHighlight(highlight);
-    }
-  };
-
-  // Hash listeners for autoscrolling to highlights
-  useEffect(() => {
-    window.addEventListener("hashchange", scrollToHighlightFromHash);
-
-    return () => {
-      window.removeEventListener("hashchange", scrollToHighlightFromHash);
+    // Scroll to highlight based on hash in the URL
+    const scrollToHighlightFromHash = (event) => {
+      /**
+       * Get the highlight by ID from the URL hash
+       */
+      console.log("scrollToHighlightFromHash");
+      console.log('Old URL:', event.oldURL);
+      console.log('New URL:', event.newURL);
+      const highlight = getHighlightById(parseIdFromHash());
+      /**
+       * Scrolling to Highlight: If highlight is found and highlighterUtilsRef.current exists, 
+       * it calls highlighterUtilsRef.current.scrollToHighlight(highlight). 
+       * This scrollToHighlight method is assumed to scroll to the specific highlight on the page, making it visible.
+       */
+      if (highlight && highlighterUtilsRef.current) {
+        highlighterUtilsRef.current.scrollToHighlight(highlight);
+      }
     };
-  }, [scrollToHighlightFromHash]);
+  
+    // Hash listeners for autoscrolling to highlights
+    useEffect(() => {
+      window.addEventListener("hashchange", scrollToHighlightFromHash);
+  
+      return () => {
+        window.removeEventListener("hashchange", scrollToHighlightFromHash);
+      };
+    }, [scrollToHighlightFromHash]);
 
   return (
     <div className="App" style={{ display: "flex", height: "100vh" }}>

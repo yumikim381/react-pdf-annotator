@@ -20,15 +20,16 @@
     border: none;
     /* Remove border */
     cursor: pointer;
-    font-size: 24px;
+    font-size: 50px;
     padding: 2px;
-    margin-right: 8px;
-    transition: color 0.3s, transform 0.2s;
+    margin: 8px;
+    /*color changes slowly*/
+    transition: color 0.2s, transform 0.2s;
 }
 
 .ZoomControls button:hover {
     color: #b958ff;
-    transform: scale(1.05);
+    transform: scale(1.5);
 }
 
 .HighlightButton {
@@ -41,12 +42,12 @@
     font-size: 16px;
     padding: 2px;
     margin-right: 8px;
-    transition: color 0.3s, transform 0.2s;
+    transition: color 0.2s, transform 0.2s;
 }
 
 .HighlightButton:hover {
     color: #b958ff;
-    transform: scale(1.05);
+    transform: scale(1.1);
 }
 
 .HighlightButton.active {

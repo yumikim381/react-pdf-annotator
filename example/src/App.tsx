@@ -44,6 +44,8 @@ const resetHash = () => {
 const App = () => {
   const [url, setUrl] = useState(PRIMARY_PDF_URL);
   const [highlights, setHighlights] = useState<Array<CommentedHighlight>>(
+    // here comes array of highlights - Array<CommentedHighlight>
+    // 🔴 needs to be defined - at least like empty array 
     TEST_HIGHLIGHTS[PRIMARY_PDF_URL] ?? [],
   );
   const currentPdfIndexRef = useRef(0);
@@ -53,7 +55,12 @@ const App = () => {
   );
   const [highlightPen, setHighlightPen] = useState<boolean>(false);
 
-  // Refs for PdfHighlighter utilities
+  /**
+   *  Refs for PdfHighlighter utilities
+   * These contain numerous helpful functions, such as scrollToHighlight,
+   * getCurrentSelection, setTip, toggleEditInProgress and many more
+   * Used as a input to PdfHighlighter component with utilsRef
+   */
   const highlighterUtilsRef = useRef<PdfHighlighterUtils>();
 
   const toggleDocument = () => {
@@ -109,15 +116,35 @@ const handleContextMenu = (
     editComment: () => editComment(highlight),
   });
 };
-
+  /**
+   * all kinds of functions to handle highlights
+   */
   const addHighlight = (highlight: GhostHighlight, comment: string) => {
     console.log("Saving highlight", highlight);
+    // add highlight to the array of highlights - added in the begining , 
+    // highlight is ghostHighlight in the beginningm but get added comment and id 
+    //GhostHighlight is like highlight without id get 
     setHighlights([{ ...highlight, comment, id: getNextId() }, ...highlights]);
   };
 
   const deleteHighlight = (highlight: ViewportHighlight | Highlight) => {
     console.log("Deleting highlight", highlight);
+    // delet highlight by filtering it's id 
     setHighlights(highlights.filter((h) => h.id != highlight.id));
+  };
+
+  /**
+   * Not really the way i want to do things !! 
+   * I want to set them to not visible and not just erase them from rendering 
+   * Or maybe it's smarter to just erase them 
+   * 🔴 think about this 
+   */
+  const resetHighlights = () => {
+    setHighlights([]);
+  };
+
+  const getHighlightById = (id: string) => {
+    return highlights.find((highlight) => highlight.id === id);
   };
 
   const editHighlight = (
@@ -127,23 +154,21 @@ const handleContextMenu = (
     console.log(`Editing highlight ${idToUpdate} with `, edit);
     setHighlights(
       highlights.map((highlight) =>
+                /**
+         * If edit is { content: input } and highlight already has a key-value pair for content, 
+         * then the spread operation { ...highlight, ...edit } 
+         * will overwrite the content property in highlight with the value from edit
+         */
         highlight.id === idToUpdate ? { ...highlight, ...edit } : highlight,
       ),
     );
   };
 
-  const resetHighlights = () => {
-    setHighlights([]);
-  };
-
-  const getHighlightById = (id: string) => {
-    return highlights.find((highlight) => highlight.id === id);
-  };
-
   // Open comment tip and update highlight with new user input
   const editComment = (highlight: ViewportHighlight<CommentedHighlight>) => {
     if (!highlighterUtilsRef.current) return;
-
+    /** pop up that can be viewed inside PdfHighlighter - has 2 components, 
+     * one is positiona nd one is content - which is a reactNode */
     const editCommentTip: Tip = {
       position: highlight.position,
       content: (
@@ -157,7 +182,12 @@ const handleContextMenu = (
         ></CommentForm>
       ),
     };
-
+    /**
+     * Set a tip to be displayed in the current PDF Viewer.
+     * tip to be displayed, or null to hide any tip.
+     * If enabled, automatic tips/popups inside of a PdfHighlighter will be disabled. 
+     * Additional niceties will also be provided to prevent new highlights being made.
+     */
     highlighterUtilsRef.current.setTip(editCommentTip);
     highlighterUtilsRef.current.toggleEditInProgress(true);
   };
@@ -207,12 +237,15 @@ const handleContextMenu = (
         }}
       >
         <Toolbar setPdfScaleValue={(value) => setPdfScaleValue(value)} toggleHighlightPen={() => setHighlightPen(!highlightPen)} />
+
         <PdfLoader document={url}>
           {(pdfDocument) => (
             <PdfHighlighter
               enableAreaSelection={(event) => event.altKey}
               pdfDocument={pdfDocument}
+
               onScrollAway={resetHash}
+
               utilsRef={(_pdfHighlighterUtils) => {
                 highlighterUtilsRef.current = _pdfHighlighterUtils;
               }}

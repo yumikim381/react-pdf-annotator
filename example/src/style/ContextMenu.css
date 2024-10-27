@@ -4,6 +4,10 @@
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
     padding: 8px;
     border-radius: 4px;
+    /*This property is used to determine which elements appear in front of 
+    or behind others when they overlap. 
+    The higher the z-index value, the closer to the viewer 
+    (or the "top" of the stack) the element will be.*/
     z-index: 1000;
     font-family: 'Roboto', sans-serif;
   }
@@ -32,5 +36,6 @@
   }
   
   .context-menu button:last-child:hover {
+    /*Turns more red*/
     background-color: #ffebee;
   }

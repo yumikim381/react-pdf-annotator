@@ -42,10 +42,11 @@ import { HighlightLayer } from "./HighlightLayer";
 import { MouseSelection } from "./MouseSelection";
 import { TipContainer } from "./TipContainer";
 
+/**
+ * 
+ */
 import type { EventBus as TEventBus, PDFLinkService as TPDFLinkService, PDFViewer as TPDFViewer } from "pdfjs-dist/web/pdf_viewer.mjs";
-
 let EventBus: typeof TEventBus, PDFLinkService: typeof TPDFLinkService, PDFViewer: typeof TPDFViewer;
-
 (async () => {
   // Due to breaking changes in PDF.js 4.0.189. See issue #17228
   const pdfjs = await import("pdfjs-dist/web/pdf_viewer.mjs");

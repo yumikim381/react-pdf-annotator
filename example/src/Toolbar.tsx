@@ -38,9 +38,9 @@ const Toolbar = ({ setPdfScaleValue, toggleHighlightPen }: ToolbarProps) => {
   return (
     <div className="Toolbar">
       <div className="ZoomControls">
-        <button title="Zoom in" onClick={zoomIn}>+</button>
-        <button title="Zoom out" onClick={zoomOut}>-</button>
-        {zoom ? `${(zoom * 100).toFixed(0)}%` : "Auto"}
+        <button title="Zoom in" onClick={zoomIn}> + </button>
+        <button title="Zoom out" onClick={zoomOut}> - </button>
+        {zoom ? `${(zoom * 100).toFixed(0)}%` : "100%"}
       </div>
       <button title="Highlight" className={`HighlightButton ${isHighlightPen ? 'active' : ''}`} onClick={() => {
         toggleHighlightPen();

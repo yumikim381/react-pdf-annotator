@@ -41,7 +41,7 @@ const ExpandableTip = ({ addHighlight }: ExpandableTipProps) => {
         </button>
       ) : (
         <CommentForm
-          placeHolder="Your comment..."
+          placeHolder="Add Annotation..."
           onSubmit={(input) => {
             addHighlight(
               {

@@ -26,6 +26,7 @@ const HighlightContainer = ({
   editHighlight,
   onContextMenu,
 }: HighlightContainerProps) => {
+
   const {
     highlight,
     viewportToScaled,
@@ -54,6 +55,9 @@ const HighlightContainer = ({
             boundingRect: viewportToScaled(boundingRect),
             rects: [],
           },
+          /**
+           * Need to change Area and Text Highlights
+           */
           content: {
             image: screenshot(boundingRect),
           },

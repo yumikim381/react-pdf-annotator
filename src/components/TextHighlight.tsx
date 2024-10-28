@@ -69,6 +69,10 @@ export const TextHighlight = ({
   onContextMenu,
   style,
 }: TextHighlightProps) => {
+
+  /*
+  This variable is just for coloring them red when the user clicks on side bar to them
+  */
   const highlightClass = isScrolledTo ? "TextHighlight--scrolledTo" : "";
   const { rects } = highlight.position;
 
@@ -77,6 +81,7 @@ export const TextHighlight = ({
       className={`TextHighlight ${highlightClass}`}
       onContextMenu={onContextMenu}
     >
+      /*Text highlight can span over multiple layers */
       <div className="TextHighlight__parts">
         {rects.map((rect, index) => (
           <div

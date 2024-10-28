@@ -17,8 +17,7 @@ const DEFAULT_ON_ERROR = (error: Error) => {
   throw new Error(`Error loading PDF document: ${error.message}!`);
 };
 
-const DEFAULT_WORKER_SRC =
-  "https://unpkg.com/pdfjs-dist@4.4.168/build/pdf.worker.min.mjs";
+const DEFAULT_WORKER_SRC = "https://unpkg.com/pdfjs-dist@4.4.168/build/pdf.worker.min.mjs";
 
 /**
  * The props type for {@link PdfLoader}.

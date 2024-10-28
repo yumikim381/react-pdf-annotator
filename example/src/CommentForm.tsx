@@ -22,7 +22,7 @@ const CommentForm = ({ onSubmit, placeHolder }: CommentFormProps) => {
     >
       <div>
         <textarea
-          value={input} // Set the current input value
+          value={input== "Add Annotation..."?  "": input} // Set the current input value
           /**
            *  Automatically focuses the textarea when the component renders, so the user can start typing immediately
            * "focus" refers to the state where an input element is ready to receive user input.

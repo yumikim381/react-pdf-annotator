@@ -16,7 +16,8 @@ import {
 } from "./react-pdf-highlighter-extended";
 import "./style/App.css";
 import { testHighlights as _testHighlights } from "./test-highlights";
-import { CommentedHighlight } from "./types";
+import { CommentedHighlight,AnnHighlight } from "./types";
+
 
 const TEST_HIGHLIGHTS = _testHighlights;
 const PRIMARY_PDF_URL = "https://arxiv.org/pdf/2203.11115";
@@ -53,6 +54,10 @@ const App = () => {
   const [pdfScaleValue, setPdfScaleValue] = useState<number | undefined>(
     undefined,
   );
+  /*
+  When its on - the highlighter mode is on and every selection will turn into a highlight
+  Otherwise we use Expandable pen to add highlights
+   */
   const [highlightPen, setHighlightPen] = useState<boolean>(false);
 
   /**
@@ -121,9 +126,6 @@ const handleContextMenu = (
    */
   const addHighlight = (highlight: GhostHighlight, comment: string) => {
     console.log("Saving highlight", highlight);
-    // add highlight to the array of highlights - added in the begining , 
-    // highlight is ghostHighlight in the beginningm but get added comment and id 
-    //GhostHighlight is like highlight without id get 
     setHighlights([{ ...highlight, comment, id: getNextId() }, ...highlights]);
   };
 
@@ -236,12 +238,16 @@ const handleContextMenu = (
           flexGrow: 1,
         }}
       >
-        <Toolbar setPdfScaleValue={(value) => setPdfScaleValue(value)} toggleHighlightPen={() => setHighlightPen(!highlightPen)} />
+        <Toolbar 
+          setPdfScaleValue={(value) => setPdfScaleValue(value)} 
+          toggleHighlightPen={() => setHighlightPen(!highlightPen)} 
+        />
 
         <PdfLoader document={url}>
           {(pdfDocument) => (
             <PdfHighlighter
               enableAreaSelection={(event) => event.altKey}
+              /**of type in pdfjs */
               pdfDocument={pdfDocument}
 
               onScrollAway={resetHash}
@@ -250,7 +256,9 @@ const handleContextMenu = (
                 highlighterUtilsRef.current = _pdfHighlighterUtils;
               }}
               pdfScaleValue={pdfScaleValue}
+
               textSelectionColor={highlightPen ? "rgba(255, 226, 143, 1)" : undefined}
+
               onSelection={highlightPen ? (selection) => addHighlight(selection.makeGhostHighlight(), "") : undefined}
               selectionTip={highlightPen ? undefined : <ExpandableTip addHighlight={addHighlight} />}
               highlights={highlights}

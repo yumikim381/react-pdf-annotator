@@ -5,6 +5,9 @@
   transition: background 0.3s;
 }
 
+/*
+Color them red when the user clicks on side bar to them
+*/
 .AreaHighlight--scrolledTo .AreaHighlight__part {
   background: #ff4141;
 }

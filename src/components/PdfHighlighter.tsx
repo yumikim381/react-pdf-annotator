@@ -43,7 +43,7 @@ import { MouseSelection } from "./MouseSelection";
 import { TipContainer } from "./TipContainer";
 
 /**
- * 
+ * pdfjs related things 
  */
 import type { EventBus as TEventBus, PDFLinkService as TPDFLinkService, PDFViewer as TPDFViewer } from "pdfjs-dist/web/pdf_viewer.mjs";
 let EventBus: typeof TEventBus, PDFLinkService: typeof TPDFLinkService, PDFViewer: typeof TPDFViewer;
@@ -55,11 +55,16 @@ let EventBus: typeof TEventBus, PDFLinkService: typeof TPDFLinkService, PDFViewe
   PDFViewer = pdfjs.PDFViewer;
 })();
 
-
+/**
+ * default param for pdfviewer
+ */
 const SCROLL_MARGIN = 10;
 const DEFAULT_SCALE_VALUE = "auto";
 const DEFAULT_TEXT_SELECTION_COLOR = "rgba(153,193,218,255)";
 
+/*
+ * 🔴
+ */
 const findOrCreateHighlightLayer = (textLayer: HTMLElement) => {
   return findOrCreateContainerLayer(
     textLayer,
@@ -84,8 +89,9 @@ export interface PdfHighlighterProps {
   highlights: Array<Highlight>;
 
   /**
-   * Event is called only once whenever the user changes scroll after
+   * 🔴 Event is called only once whenever the user changes scroll after
    * the autoscroll function, scrollToHighlight, has been called.
+   * - Basicallly when you scroll to Highlight and then you scroll away again 
    */
   onScrollAway?(): void;
 
@@ -145,6 +151,8 @@ export interface PdfHighlighterProps {
    * This should be a highlight container/renderer of some sorts. It will be
    * given appropriate context for a single highlight which it can then use to
    * render a TextHighlight, AreaHighlight, etc. in the correct place.
+   * 
+   * passed to HighlightLayer
    */
   children: ReactNode;
 

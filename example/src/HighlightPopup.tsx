@@ -9,8 +9,8 @@ interface HighlightPopupProps {
 }
 
 const HighlightPopup = ({ highlight }: HighlightPopupProps) => {
-  return highlight.comment ? (
-    <div className="Highlight__popup">{highlight.comment}</div>
+  return highlight.content.text? (
+    <div className="Highlight__popup">{highlight.content.text}</div>
   ) : (
     <div className="Highlight__popup">Comment has no Text</div>
   );
